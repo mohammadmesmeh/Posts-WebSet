@@ -8,41 +8,50 @@ function readPosts() {
     request.setRequestHeader("Content-Type", "application/json")
     request.send();
     request.onload = () => {
-        let posts = request.response;
+        if (request.status >= 200 && request.status < 300) {
+            let posts = request.response;
 
-        const numUsersId = [...new Set(posts.map((ele) => ele.userId))];
+            const numUsersId = [...new Set(posts.map((ele) => ele.userId))];
 
-        for (const user of numUsersId) {
-            const listUsers = document.querySelector(".list-users");
-            const linkUser = document.createElement("a");
-            linkUser.setAttribute("id", `${user}`);
-            listUsers.appendChild(linkUser);
-            const li = document.createElement("li");
-            linkUser.appendChild(li);
-            linkUser.classList.add("userbtn", "bg-gray-500", "w-full", "text-center", "py-3", "px-4", "rounded", "block", "cursor-pointer", "my-2", "text-xl", "font-medium", "dark:text-white", "text-white", "rounded-lg", "hover:bg-gray-700", "transition-all");
-            const userName = document.createElement("p");
-            li.appendChild(userName);
-            const userEmail = document.createElement("p");
-            li.appendChild(userEmail)
-            userName.innerHTML = `USER-${user}`;
-            linkUser.addEventListener("click", () => {
-                if (content.innerHTML === ""){
-                    userPosts(user);
-                    }else{
-                        content.innerHTML="";
-                         userPosts(user);
+            for (const user of numUsersId) {
+                const listUsers = document.querySelector(".list-users");
+                const linkUser = document.createElement("a");
+                linkUser.setAttribute("id", `${user}`);
+                listUsers.appendChild(linkUser);
+                const li = document.createElement("li");
+                linkUser.appendChild(li);
+                linkUser.classList.add("userbtn", "bg-gray-500", "w-full", "text-center", "py-3", "px-4", "rounded", "block", "cursor-pointer", "my-2", "text-xl", "font-medium", "dark:text-white", "text-white", "rounded-lg", "hover:bg-gray-700", "transition-all");
+                const userName = document.createElement("p");
+                li.appendChild(userName);
+                const userEmail = document.createElement("p");
+                li.appendChild(userEmail)
+                userName.innerHTML = `USER-${user}`;
+                linkUser.addEventListener("click", () => {
+                    if (content.innerHTML === "") {
+                        userPosts(user);
+                    } else {
+                        content.innerHTML = "";
+                        userPosts(user);
 
                     }
 
+                });
+
+
+            }
+
+        } else {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Something went wrong of requst!",
+              
             });
-
-
         }
-
     }
 }
 readPosts();
-   
+
 
 function userPosts(userId) {
 
@@ -86,10 +95,10 @@ function userPosts(userId) {
                 titelOfPost.innerHTML = post.title;
                 textOfPost.innerHTML = post.body;
 
-            } 
+            }
 
         })
-        
+
 
 
     }
